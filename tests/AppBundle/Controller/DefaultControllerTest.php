@@ -134,7 +134,7 @@ class DefaultControllerTest extends WebTestCase
          */
         $json = json_encode($postData);
         $crawler = $client->request(
-                'POST',
+                'PUT',
                 'api/edit/111',
                 $postData,
                 array(),
