@@ -1,0 +1,24 @@
+{# /Resources/views/add.html.twig #}
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Message Board</title>
+<head>
+{#
+<h1>Name :  {{ userName }}</h1>
+<h1>Message :  {{ message }}</h1>
+<h1>PublishedAt :  {{ publishedAt }}</h1>
+#}
+<h1>Message Creation</h1>
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+         <input type="submit" value="Create"/>
+{{ form_end(form) }}
+
+<ul>
+<li>
+<a href="{{ path('list') }}">Back to the list</a>
+</li>
+</ul>
+

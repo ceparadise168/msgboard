@@ -1,0 +1,11 @@
+{# /Resources/views/show.html.twig #}
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Message Board</title>
+<head>
+{% for message in messages %}
+<h1>Name :  {{ message.userName }}</h1>
+<h1>Message :  {{ message.msg }}</h1>
+<h1>PublishedAt :  {{ message.publishedAt }}</h1>
+{% endfor%}

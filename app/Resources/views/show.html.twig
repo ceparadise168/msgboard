@@ -1,0 +1,51 @@
+{# /Resources/views/show.html.twig #}
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Message Board</title>
+<head>
+{#
+    <h1>Name :  {{ userName }}</h1>
+        <h1>Message :  {{ message }}</h1>
+        <h1>PublishedAt :  {{ publishedAt }}</h1>
+#}
+
+        <table>
+        <tbody>
+
+        <tr>
+        <th>Name</th>
+        <td>{{ message.userName }}</td>
+        </tr>
+
+        <tr>~
+        <th>Message</th>
+        <td>{{ message.Msg }}</td>
+        </tr>
+
+        <tr>
+        <th>PublishTime</th>
+        <td>{{ message.publishedAt }}</td>
+        <tr>
+
+        </tbody>
+        </table>
+
+        <ul>
+        <li>
+        <a href="{{ path('pagelist') }}">Back to the list</a>
+        </li>
+        <li>
+        <a href="{{ path('update', { 'id': message.id }) }}">Edit</a>
+        </li>
+        <li>
+</li>
+
+
+ <li>
+{{ form_start(delete_form) }}
+<input type="submit" value="Delete">
+{{ form_end(delete_form) }}
+</li>
+
+</ul>

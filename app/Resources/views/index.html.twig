@@ -1,0 +1,70 @@
+{# index.html.twig #}
+
+<h1>Messages list</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Message</th>
+            <th>PublishedAt</th>
+            <th>UpdatedAt</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for message in messages %}
+        <tr>
+            <td><a href="{{ path('show', {'id': message.id}) }}">{{ message.id }}</a></td>
+            <td>{{ message.userName }}</td>
+            <td>{{ message.Msg }}</td>
+            <td>{{ message.PublishedAt }}</td>
+            <td>{{ message.updatedAt }}</td>
+            <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('edit', { 'id': message.id}) }}">edit</a>
+                     <li>
+                     <li>
+                        <a href="{{ path('delete', { 'id': message.id}) }}">delete</a> 
+                    </li>
+               </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<ul>
+    <li>
+        <a href="{{ path('add') }}">Create a new Message</a>
+    </li>
+</ul>
+
+{% if maxPages > 1 %}
+<ul class="pagination pagination-sm">
+    {# `«` arrow  #}
+    <li {{ thisPage == 1 ? 'class="disabled"' }}>
+        <a href="{{ path('list', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">«</a>
+    </li>
+
+    {# Render each page number #}
+    {% for i in 1..maxPages %}
+    <li {{ thisPage == i ? 'class="active"' }}>
+    <a href="{{ path('page', {page: i}) }}">{{ i }}</a>
+    </li>
+    {% endfor %}
+
+    {# `»` arrow #}
+    <li {{ thisPage == maxPages ? 'class="disabled"' }}>
+        <a href="{{ path('page', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">»</a>
+    </li>
+</ul>
+{% endif %}
+
+
+<form action="app.php" method="get">
+　電子郵件: <input type="text" name="Email" />
+　<input type="submit" value="送出表單"/>
+</form>
+
