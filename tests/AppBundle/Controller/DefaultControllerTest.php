@@ -8,143 +8,198 @@ use AppBundle\Entity\Message;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-
 class DefaultControllerTest extends WebTestCase
 {
-
     /**
-     * @group ll
+     * It tests indexActionAPI by creating a client
+     * then request to the controller and check following assertions with the response.
+     * 1.assert statusCode is 200.
+     * 2.assert there are 5 messages in the response json.
+     * 3.assert that messages ,the maxpage and the thispage parms are in the response.
      */
-    public function testIndex()
+    public function testIndexActionAPI()
     {
         $client = static::createClient();
-
         $crawler = $client->request('GET', '/api/list');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $content = $client->getResponse()->getcontent();
-
         $data = json_decode($content,true);
-        //   dump($data,count($data));
-
         $this->assertCount(5, $data["messages"]);
-        $this->assertNotCount(0, $data);
-
-        /*
-           $this->assertContains('messages', $crawler->filter('body')->text());
-
-           $this->assertCount(
-           5,
-           $crawler->filter('body > table > tbody > tr')
-           );
-         */
+        $this->assertCount(3, $data);
     }
 
     /**
-     * @group aa
+     * It tests createActionAPI by creating a client
+     * then request to the controller and check following assertions with the response.
+     * 1.assert the statusCode is 200.
+     * 2.assert the userName in the request parameter including a random number is equal to the number in the response.
      */
-    public function testCreateAction()
+    public function testCreateActionAPI()
     {
         $client = static::createClient();
 
         $postData = [
             'userName' => 'testPHPUnit'. mt_rand(),
-            'msg' => 'test'
-                ];
+            'msg' => 'testAdd'
+        ];
+        $paramArray = [];
+        $uploadFileArray = [];
+        $contentTypeArray = ['CONTENT_TYPE' => 'application/json'];
 
         $crawler = $client->request(
                 'POST',
                 '/api/add',
-                array(),
-                array(),
-                array('CONTENT_TYPE' => 'application/json'),
+                $paramArray,
+                $uploadFileArray,
+                $contentTypeArray,
                 json_encode($postData)
-                );
-
+        );
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
         $content = $client->getResponse()->getcontent();
-
         $responseCheck = json_decode($content, true);
 
-        dump(gettype($responseCheck), $responseCheck["userName"], $responseCheck, $content);
-
-        $this->assertContains($postData['userName'], (string)$content);
         $this->assertEquals($postData['userName'], $responseCheck["userName"]);
-
-        //        $client->followRedirects();
-        /*
-           $crawler = $client->request('GET', '/add');
-        // $postLink = $crawler->filter('body > ul > li > a')->link();
-        $content = $crawler->getResponse()->getContent();
-         */
     }
 
     /**
-     * @group dd
+     * It tests deleteAcitonAPI by creating a client
+     * then request to the controller and check following assertions with the response.
+     * 1.assert the id requested by the client was not found in the controller when get a response "ID NOT FOUND".
+     * 2.assert the id requested by the client is equal to to the id which has been deleted in the controller.
      */
-    public function testDeleteAction()
+    public function testDeleteActionAPIT()
     {
-        $id = 175;
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/api/list');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $content = $client->getResponse()->getcontent();
+        $data = json_decode($content,true);
+        $this->assertCount(5, $data["messages"]);
+        $this->assertCount(3, $data);
+        $id = $data["messages"][0]["id"];
+        dump($id);
+//        $id = 334;
         $path = "api/delete/" . $id;
 
         $client = static::createClient();
         $crawler = $client->request(
                 'GET',
                 $path
-                );
+        );
         $content = $client->getResponse()->getcontent();
         $responseCheck = json_decode($content, true);
-        dump($responseCheck,$path);
-        if ($responseCheck != "ID NOT FOUND"){
-           $this->assertEquals($id, $responseCheck["id"]);
+
+        if ($responseCheck == "ID NOT FOUND") {
+            $this->assertNotEquals($id, $responseCheck);
         } else {
-        $this->assertEquals(1,1);
-           dump("NOT FOUND");
+            $this->assertEquals($id, $responseCheck["id"]);
         }
     }
 
     /**
-     * @group ee
+     * It tests deleteAcitonAPI by creating a client
+     * then request to the controller and check following assertions with the response.
+     * 1.assert the id requested by the client was not found in the controller when get a response "ID NOT FOUND".
+     * 2.assert the id requested by the client is equal to to the id which has been deleted in the controller.
      */
-    public function testEditAction()
+    public function testDeleteActionAPIF()
     {
-        $client = static::createClient();
+        $id = 338;
+        $path = "api/delete/" . $id;
 
+        $client = static::createClient();
+        $crawler = $client->request(
+                'GET',
+                $path
+        );
+        $content = $client->getResponse()->getcontent();
+        $responseCheck = json_decode($content, true);
+
+        if ($responseCheck == "ID NOT FOUND") {
+            $this->assertNotEquals($id, $responseCheck);
+        } else {
+            $this->assertEquals($id, $responseCheck["id"]);
+        }
+    }
+    /**
+     * It tests editActionAPI by creating a client
+     * then request to the controller and check following assertions with the response.
+     * 1.assert the statusCode is 200.
+     * 2.assert the id requested by the client was not found in the conreollwe when get a response "GG".
+     * 3.assert the userName in the request parameter including a random number is equal to the number in the response.
+     */
+    public function testEditActionAPIT()
+    {
         $postData = [
             'userName' => 'testEdit'. mt_rand(),
             'msg' => 'testEdit'
-                ];
-        //  $id = 167;
-        //  $path = "api/edit/" . $id;
-        /*
-           $encoders = array(new XmlEncoder(), new JsonEncoder());
-           $normalizers = array(new ObjectNormalizer());
-           $serializer = new Serializer($normalizers, $encoders);
-           $json = $serializer->serialize($postData, 'json');
-           $dejson = json_decode($json, true);
-           $json = $serializer->serialize($dejson, 'json');
-         */
+        ];
         $json = json_encode($postData);
+        $id = 167;
+        $path = 'api/edit/' .  $id;
+        $uploadFileArray = [];
+        $contentTypeArray = ['CONTENT_TYPE' => 'application/json'];
+
+        $client = static::createClient();
         $crawler = $client->request(
                 'PUT',
-                'api/edit/111',
+                $path,
                 $postData,
-                array(),
-                array('CONTENT_TYPE' => 'application/json'));
-  //              $json
-  //              );
-         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+                $uploadFileArray,
+                $contentTypeArray
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $content = $client->getResponse()->getcontent();
-        // $responseCheck = json_decode($content, true);
-        dump($content);
-        $this->assertContains($postData['userName'], (string)$content);
+
+        if ($content == "GG") {
+            $this->assertNotEquals($id, (string)$content);
+        } else {
+            $this->assertContains($postData['userName'], (string)$content);
+        }
+    }
+
+    /**
+     * It tests editActionAPI by creating a client
+     * then request to the controller and check following assertions with the response.
+     * 1.assert the statusCode is 200.
+     * 2.assert the id requested by the client was not found in the conreollwe when get a response "GG".
+     * 3.assert the userName in the request parameter including a random number is equal to the number in the response.
+     */
+    public function testEditActionAPIF()
+    {
+        $postData = [
+            'userName' => 'testEdit'. mt_rand(),
+            'msg' => 'testEdit'
+        ];
+        $json = json_encode($postData);
+        $id = 111;
+        $path = 'api/edit/' .  $id;
+        $uploadFileArray = [];
+        $contentTypeArray = ['CONTENT_TYPE' => 'application/json'];
+
+        $client = static::createClient();
+        $crawler = $client->request(
+                'PUT',
+                $path,
+                $postData,
+                $uploadFileArray,
+                $contentTypeArray
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $content = $client->getResponse()->getcontent();
+
+        if ($content == "GG") {
+            $this->assertNotEquals($id, (string)$content);
+        } else {
+            $this->assertContains($postData['userName'], (string)$content);
+        }
     }
 }
