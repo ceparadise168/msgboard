@@ -143,7 +143,7 @@ class DefaultControllerTest extends WebTestCase
             'msg' => 'testEdit'
         ];
         $json = json_encode($postData);
-        $id = 167;
+        $id = 213;
         $path = 'api/edit/' .  $id;
         $uploadFileArray = [];
         $contentTypeArray = ['CONTENT_TYPE' => 'application/json'];
@@ -180,7 +180,7 @@ class DefaultControllerTest extends WebTestCase
             'msg' => 'testEdit'
         ];
         $json = json_encode($postData);
-        $id = 111;
+        $id = 211;
         $path = 'api/edit/' .  $id;
         $uploadFileArray = [];
         $contentTypeArray = ['CONTENT_TYPE' => 'application/json'];
