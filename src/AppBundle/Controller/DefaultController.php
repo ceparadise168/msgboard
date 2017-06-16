@@ -230,7 +230,6 @@ class DefaultController extends Controller
     }
 
 
-    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
     /**
      * Get page then redirect list to list/page
